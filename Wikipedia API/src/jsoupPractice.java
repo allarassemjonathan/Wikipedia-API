@@ -78,7 +78,6 @@ public class jsoupPractice {
 
               }
               public static String getSection(String key) {
-            	  Do
             	  return "";
               }
 }

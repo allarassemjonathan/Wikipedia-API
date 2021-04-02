@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,7 +19,7 @@ public class Wikipedia {
 	private ArrayList<String> links;
 	private ArrayList<String> sections;
 	
-	public Page search(String query) throws IOException,  org.jsoup.HttpStatusException {
+	public String search(String query) throws IOException,  org.jsoup.HttpStatusException {
 		try {
 		Page page = new Page();
 		String result = "";
@@ -62,10 +63,10 @@ public class Wikipedia {
 		}
 		page.setImages(images);
 		
-		return page;
+		return page.content();
 		}catch(org.jsoup.HttpStatusException e){
 			Page page = new Page("The person/location/event you are searching does not exist");
-			return page;
+			return page.content();
 		}
 	}
 	
@@ -73,8 +74,15 @@ public class Wikipedia {
 		String cleanQuery = "";
 		String result = "";
 		String [] words = query.split(" ");
-		for(String word: words) {
-			cleanQuery += word + "_";
+		for(int i = 0; i < words.length; i++) {
+			if(i == words.length -1) {
+				cleanQuery += words[i];
+			}
+			else {
+				cleanQuery += words[i] + "_";
+			}
+
+			System.out.println(cleanQuery);
 		}
 		return cleanQuery;
 	}
@@ -86,8 +94,11 @@ public class Wikipedia {
 		return "";
 	}
 	
-	public String summary() {
-		return "";
+	public String summary(String query, int limit) throws HttpStatusException, IOException {
+		String summary = this.search(query);
+		limit = 20000;
+		summary = summary.substring(0,limit);
+		return summary;
 	}
 	
 }
